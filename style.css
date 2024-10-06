@@ -1,0 +1,57 @@
+* {
+  font-family: sans-serif;
+}
+
+table > * {
+  border-bottom: 1px solid #dde6ecff;
+}
+
+table {
+  box-shadow: 0 0 1.45rem #ccc;
+}
+
+tr:hover td {
+  background-color: #ebebebff;
+  cursor: pointer;
+}
+
+.filter-input {
+  cursor: pointer;
+  width: 90%;
+}
+
+th:has(input[type="search"]):hover,
+th:hover > input[type="search"] {
+  background-color: #e5e8eb;
+  /* background-color: red; */
+}
+
+th:has(input[type="search"]),
+th > input {
+  background-color: #f8f8f8;
+}
+
+th > input {
+  border: none;
+}
+
+.filter-input ~ div {
+  width: 90%;
+}
+
+li:hover {
+  background-color: #e8f0f4ff;
+  font-size: 16px;
+}
+
+.filterDropdownSearch {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  outline: none;
+  border: 1px solid #009ac2ff;
+}
+
+.hidden {
+  display: none;
+}

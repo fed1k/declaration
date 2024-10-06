@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main class="d-flex">
+      <p
+        style="
+          writing-mode: vertical-lr;
+          text-align: end;
+          transform: rotate(180deg);
+          cursor: pointer;
+          height: 100vh;
+          background-color: #fbf9ffff;
+          color: #54a7b6ff;
+          margin: 0;
+          padding-left: 5px;
+          padding-bottom: 14px;
+          box-shadow: 7px 0 13px -5px #e2e2e2;
+        "
+        class="sidebar-toggle"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample"
+      >
+        Фильтры (0) <i class="fas fa-angle-left"></i>
+      </p>
+
+      <section style="flex: 1; background-color: #f5f8faff; padding: 1rem">
+        <p
+          class="text-end"
+          style="
+            color: #18b0c9;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+          "
+        >
+          Очистить поиск
+        </p>
+
+        <!-- ТАБЛИЦА -->
+        <div class="table" style="height: 80vh; overflow-y: auto">
+          <table style="border-collapse: collapse">
+            <thead style="position: sticky; top: 0"></thead>
+            <div>
+              <tbody></tbody>
+            </div>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <nav
+      style="background-color: #fbf9ffff; width: 80vw"
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasExample"
+      aria-labelledby="offcanvasExampleLabel"
+    >
+      <p
+        class="text-uppercase"
+        style="padding-left: 1rem; line-height: 50px; border: 1px solid #b6c9d9"
+      >
+        <span class="text-filter">Фильтры (0)</span>
+        <i class="fa-solid fa-angle-left"></i>
+      </p>
+
+      <form
+        class="offcanvas-body"
+        style="display: grid; grid-template-columns: 1fr 1fr 1fr"
+      >
+        <div>
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block"
+            for="declaration-number"
+            >Номер декларации о соответствии</label
+          >
+          <input
+            type="text"
+            name=""
+            id="declaration-number"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+        </div>
+
+        <div>
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Дата регистрации декларации</label
+          >
+          <input type="date" /> <span> - </span>
+          <input type="date" />
+        </div>
+
+        <div>
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Дата окончания действия декларации</label
+          >
+          <input type="date" /> <span> - </span>
+          <input type="date" />
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Статус</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class=""
+            aria-describedby="inputGroup-sizing-sm"
+            name="status"
+          />
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Тип декларации</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="declaration-type"
+            readonly
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Тип объекта декларирования</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="declaration-object-type"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Происхождение продукции</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="product-origins"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Группы продукции РФ</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            name="product-group-RF"
+            class="filter-input"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Группы продукции ЕАЭС</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="product-group-EAES"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Единый перечень продукции ЕАЭС</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="unified-product-EAES"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Единый перечень продукции РФ</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="unified-product-RF"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+           
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Технический регламент</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            name="technical-regulations"
+            class="filter-input"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+          class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+
+        <div style="position: relative">
+          <label
+            style="color: #415969; font-size: 11px"
+            class="d-block mt-2"
+            for=""
+            >Вид заявителя</label
+          >
+
+          <!-- for selected items -->
+          <div class="d-flex"></div>
+
+          <input
+            type="text"
+            class="filter-input"
+            name="applicant-type"
+            aria-describedby="inputGroup-sizing-sm"
+          />
+
+          <i
+            style="transform: translateX(-26px); color: #a0b3c2ff"
+            class="fa-solid fa-angle-down"
+          ></i>
+
+          <!-- dropdown -->
+          <div
+            class="hidden"
+            style="
+              background-color: white;
+              max-height: 200px;
+              overflow-y: auto;
+              position: absolute;
+              z-index: 10;
+            "
+          >
+            <input type="search" class="filterDropdownSearch" />
+          </div>
+        </div>
+      </form>
+      <div
+        class="sticky-bottom p-3 d-flex"
+        style="
+          align-items: center;
+          border: 1px solid #b6c9d9;
+          justify-content: space-around;
+        "
+      >
+        <p class="m-0" style="color: #18b0c9; font-size: 13px">
+          Очистить фильтры
+        </p>
+        <button
+          style="
+            background-color: #17b3cbff;
+            color: white;
+            border: none;
+            padding: 2px 20px;
+            border-radius: 3px;
+          "
+        >
+          Найти
+        </button>
+      </div>
+    </nav>
+
+    <script type="module" src="./app.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
