@@ -1,4 +1,5 @@
 import {
+  activeFilters,
   appliedFiltersIndexes,
   filterFields,
   tableColumns,
@@ -30,7 +31,7 @@ const fetchTableData = async () => {
 
 fetchTableData();
 
-function selectFruit(fruit, index) {
+function selectFilter(fruit, index) {
   const p = document.createElement("p");
   p.style.backgroundColor = "#D0E8ECFF";
   p.style.padding = "4px 8px";
@@ -41,9 +42,9 @@ function selectFruit(fruit, index) {
   !appliedFiltersIndexes.includes(index) && appliedFiltersIndexes.push(index);
   filtersText.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
   filtersText2.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
-
-  filterInputs[index].nextElementSibling.nextElementSibling.style.display =
-    "none";
+  const labelName = filterInputs[index].previousElementSibling.previousElementSibling.textContent
+  activeFilters[labelName].push(fruit)
+  filterInputs[index].nextElementSibling.nextElementSibling.classList.add("hidden")
 }
 
 function checkAllCheckboxes() {
@@ -157,25 +158,31 @@ function searchFilter(searchTerm, fieldName) {
   displayTableData(searchedData);
 }
 
-function displayFilterOptions(data, input) {
+function displayFilterOptions(data) {
   const dropdowns = document.querySelectorAll(".filter-input");
+
   dropdowns.forEach((dropdown, index) => {
-    dropdown.nextElementSibling.nextElementSibling.innerHTML += data[
-      index
-    ]?.items
-      .map((item) => {
-        if (!item.name) return "";
-        return `<li style="font-size: 14px; font-weight: 300; cursor: pointer;padding: 4px 8px; list-style: none;">${item.name}</li>`;
-      })
-      .join("");
-    const dropdownOptions = document.querySelectorAll("li");
-    dropdownOptions.forEach((option) => {
-      option.addEventListener("click", () => {
-        selectFruit(option.textContent, index);
+    const optionList = dropdown.nextElementSibling.nextElementSibling;
+
+    data[index]?.items.forEach((item) => {
+      if (!item.name) return;
+      const li = document.createElement("li");
+      li.style.fontSize = "14px";
+      li.style.fontWeight = "300";
+      li.style.cursor = "pointer";
+      li.style.padding = "4px 8px";
+      li.style.listStyle = "none";
+      li.textContent = item.name;
+
+      li.addEventListener("click", () => {
+        selectFilter(item.name, index); // Pass the selected item and its index
       });
+
+      optionList.appendChild(li);
     });
   });
 }
+
 
 function filterOptionsSearch(searchTerm) {
   const searchedData = filterOptions.filter((d) =>
@@ -195,9 +202,6 @@ const fetchAllJSONFiles = async () => {
     const data = await Promise.all(
       responses.map((response) => response.json())
     );
-
-    console.log("All JSON data:", data);
-    // const dropdowns = document.querySelectorAll(".filter-input")
     displayFilterOptions(data);
     return data;
   } catch (error) {
