@@ -9,11 +9,24 @@ const filterInputs = document.querySelectorAll(".filter-input");
 const filtersText = document.querySelector(".sidebar-toggle");
 const filtersText2 = document.querySelector(".text-filter");
 let tableDataCopy = [];
-let filterOptions = [];
+let allFilterOptionsData = [];
 
 filterInputs.forEach((input, index) => {
   input.addEventListener("focus", () => {
     input.nextElementSibling.nextElementSibling.classList.remove("hidden");
+    const search =
+      input.nextElementSibling.nextElementSibling.firstElementChild;
+    search.focus();
+    search.addEventListener("input", (e) => {
+      filterOptionsSearch(e.target.value, index);
+    });
+
+    search.addEventListener("blur", () => {
+      setTimeout(() => {
+        input.nextElementSibling.nextElementSibling.classList.add("hidden");
+      }, 200);
+    });
+
     filterInputs.forEach((inp, ind) => {
       if (ind !== index)
         inp.nextElementSibling.nextElementSibling.classList.add("hidden");
@@ -42,9 +55,13 @@ function selectFilter(fruit, index) {
   !appliedFiltersIndexes.includes(index) && appliedFiltersIndexes.push(index);
   filtersText.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
   filtersText2.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
-  const labelName = filterInputs[index].previousElementSibling.previousElementSibling.textContent
-  activeFilters[labelName].push(fruit)
-  filterInputs[index].nextElementSibling.nextElementSibling.classList.add("hidden")
+  const labelName =
+    filterInputs[index].previousElementSibling.previousElementSibling
+      .textContent;
+  activeFilters[labelName].push(fruit);
+  filterInputs[index].nextElementSibling.nextElementSibling.classList.add(
+    "hidden"
+  );
 }
 
 function checkAllCheckboxes() {
@@ -164,6 +181,8 @@ function displayFilterOptions(data) {
   dropdowns.forEach((dropdown, index) => {
     const optionList = dropdown.nextElementSibling.nextElementSibling;
 
+    Array.from(optionList.querySelectorAll("li")).forEach((li) => li.remove());
+
     data[index]?.items.forEach((item) => {
       if (!item.name) return;
       const li = document.createElement("li");
@@ -183,12 +202,17 @@ function displayFilterOptions(data) {
   });
 }
 
+function filterOptionsSearch(searchTerm, index) {
+  // Create a copy of allFilterOptionsData to avoid mutating the original data
+  const copy = JSON.parse(JSON.stringify(allFilterOptionsData));
 
-function filterOptionsSearch(searchTerm) {
-  const searchedData = filterOptions.filter((d) =>
-    d.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const searchedData = copy[index].items.filter((d) =>
+    d.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
   );
-  displayFilterOptions(searchedData);
+
+  copy[index].items = searchedData;
+
+  displayFilterOptions(copy);
 }
 
 const fetchAllJSONFiles = async () => {
@@ -203,6 +227,7 @@ const fetchAllJSONFiles = async () => {
       responses.map((response) => response.json())
     );
     displayFilterOptions(data);
+    allFilterOptionsData = data;
     return data;
   } catch (error) {
     console.error("Error fetching JSON files:", error);
