@@ -8,6 +8,7 @@ import {
 const filterInputs = document.querySelectorAll(".filter-input");
 const filtersText = document.querySelector(".sidebar-toggle");
 const filtersText2 = document.querySelector(".text-filter");
+const searchBtn = document.querySelector(".search-btn");
 let tableDataCopy = [];
 let allFilterOptionsData = [];
 
@@ -21,10 +22,12 @@ filterInputs.forEach((input, index) => {
       filterOptionsSearch(e.target.value, index);
     });
 
+
+    // Hide the dropdown when the input loses focus
     search.addEventListener("blur", () => {
       setTimeout(() => {
         input.nextElementSibling.nextElementSibling.classList.add("hidden");
-      }, 200);
+      }, 100);
     });
 
     filterInputs.forEach((inp, ind) => {
@@ -42,6 +45,7 @@ const fetchTableData = async () => {
   tableDataCopy = data.items;
 };
 
+// Initial fetch and display of table data
 fetchTableData();
 
 function selectFilter(fruit, index) {
@@ -233,5 +237,18 @@ const fetchAllJSONFiles = async () => {
     console.error("Error fetching JSON files:", error);
   }
 };
+
+searchBtn.addEventListener("click", () => {
+  activateFilters()
+})
+
+const activateFilters = () => {
+  // const filteredData = tableDataCopy.filter((data) => {
+    
+  //   return true;
+  // });
+
+  // displayTableData(filteredData);
+}
 
 fetchAllJSONFiles();
