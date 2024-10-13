@@ -9,7 +9,6 @@ export const filterFields = {
   "technical-regulations": "./tech-regulation.json",
   "applicant-type": "./vid.json",
 };
-export const appliedFiltersIndexes = [];
 export const tableColumns = [
   "",
   "Статус декларации",
@@ -21,15 +20,3 @@ export const tableColumns = [
   "Общее наименование продукции",
   "Статус испытаний",
 ];
-
-export const activeFilters = {
-  "Тип декларации": [],
-  "Тип объекта декларирования": [],
-  "Происхождение продукции": [],
-  "Группы продукции РФ": [],
-  "Группы продукции ЕАЭС": [],
-  "Единый перечень продукции ЕАЭС": [],
-  "Единый перечень продукции РФ": [],
-  "Технический регламент": [],
-  "Вид заявителя": []
-}

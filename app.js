@@ -1,6 +1,4 @@
 import {
-  activeFilters,
-  appliedFiltersIndexes,
   filterFields,
   tableColumns,
 } from "./constants.js";
@@ -9,8 +7,22 @@ const filterInputs = document.querySelectorAll(".filter-input");
 const filtersText = document.querySelector(".sidebar-toggle");
 const filtersText2 = document.querySelector(".text-filter");
 const searchBtn = document.querySelector(".search-btn");
+const clearFiltersBtn = document.querySelector(".clear-filters")
 let tableDataCopy = [];
+let appliedFiltersIndexes = [];
 let allFilterOptionsData = [];
+
+let activeFilters = {
+  "Тип декларации": [],
+  "Тип объекта декларирования": [],
+  "Происхождение продукции": [],
+  "Группы продукции РФ": [],
+  "Группы продукции ЕАЭС": [],
+  "Единый перечень продукции ЕАЭС": [],
+  "Единый перечень продукции РФ": [],
+  "Технический регламент": [],
+  "Вид заявителя": []
+}
 
 filterInputs.forEach((input, index) => {
   input.addEventListener("focus", () => {
@@ -21,7 +33,6 @@ filterInputs.forEach((input, index) => {
     search.addEventListener("input", (e) => {
       filterOptionsSearch(e.target.value, index);
     });
-
 
     // Hide the dropdown when the input loses focus
     search.addEventListener("blur", () => {
@@ -230,6 +241,8 @@ const fetchAllJSONFiles = async () => {
     const data = await Promise.all(
       responses.map((response) => response.json())
     );
+    // console.log(data);
+    
     displayFilterOptions(data);
     allFilterOptionsData = data;
     return data;
@@ -239,16 +252,68 @@ const fetchAllJSONFiles = async () => {
 };
 
 searchBtn.addEventListener("click", () => {
-  activateFilters()
-})
+  activateFilters();
+});
 
 const activateFilters = () => {
-  // const filteredData = tableDataCopy.filter((data) => {
-    
-  //   return true;
-  // });
+  // extract the active filters
+  const updated = Object.fromEntries(
+    Object.entries(activeFilters).map(([key, value]) => {
+      // Modify the key as needed. For example, here I am converting it to English using a mapping object.
+      const keyMap = {
+        "Тип декларации": "declType",
+        "Тип объекта декларирования": "declObjectType",
+        "Происхождение продукции": "productOrig",
+        "Группы продукции РФ": "Product Groups RF",
+        "Группы продукции ЕАЭС": "Product Groups EAEU",
+        "Единый перечень продукции ЕАЭС": "Unified Product List EAEU",
+        "Единый перечень продукции РФ": "Unified Product List RF",
+        "Технический регламент": "technicalReglaments",
+        "Вид заявителя": "applicantType"
+      };
 
-  // displayTableData(filteredData);
-}
+      return [keyMap[key] || key, value];
+    }))
+
+    // console.log(updated);
+    
+  
+
+  // Filter the table data based on the active filters
+  const filteredData = tableDataCopy.filter((item) => {
+    return Object.entries(updated).every(([key, value]) => {
+      return value.length === 0 || value.includes(item[key]);
+    });
+  });
+
+  console.log(tableDataCopy);
+  
+  displayTableData(filteredData);
+  
+  
+  
+};
+
+clearFiltersBtn.addEventListener("click", () => {
+  filterInputs.forEach((input, index) => {
+    input.previousElementSibling.innerHTML = "";
+    appliedFiltersIndexes = [];
+    filtersText.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
+    filtersText2.textContent = `Фильтры (${appliedFiltersIndexes.length})`;
+  });
+
+  const newObject = Object.fromEntries(
+    Object.entries(activeFilters).map(([key, value]) => [key, []])
+  );
+
+  activeFilters = newObject;
+
+  console.log(activeFilters);
+  
+  displayTableData(tableDataCopy);
+});
+
+// console.log(tableDataCopy);
+
 
 fetchAllJSONFiles();
