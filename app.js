@@ -1,13 +1,10 @@
-import {
-  filterFields,
-  tableColumns,
-} from "./constants.js";
+import { filterFields, tableColumns } from "./constants.js";
 
 const filterInputs = document.querySelectorAll(".filter-input");
 const filtersText = document.querySelector(".sidebar-toggle");
 const filtersText2 = document.querySelector(".text-filter");
 const searchBtn = document.querySelector(".search-btn");
-const clearFiltersBtn = document.querySelector(".clear-filters")
+const clearFiltersBtn = document.querySelector(".clear-filters");
 let tableDataCopy = [];
 let appliedFiltersIndexes = [];
 let allFilterOptionsData = [];
@@ -21,8 +18,8 @@ let activeFilters = {
   "Единый перечень продукции ЕАЭС": [],
   "Единый перечень продукции РФ": [],
   "Технический регламент": [],
-  "Вид заявителя": []
-}
+  "Вид заявителя": [],
+};
 
 filterInputs.forEach((input, index) => {
   input.addEventListener("focus", () => {
@@ -182,12 +179,19 @@ function statusChecker(status) {
     return `<i style="font-size: 26px; color: #03B090FF;" class="fa-regular fa-circle-check"></i>`;
 }
 
+// debounce function to limit the number of filter calls
+let debounceTimeout;
 function searchFilter(searchTerm, fieldName) {
-  const searchedData = tableDataCopy.filter((d) =>
-    d[fieldName].toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Clear the previous timeout if it's still pending
+  clearTimeout(debounceTimeout);
 
-  displayTableData(searchedData);
+  // Set a new timeout with a 700ms delay
+  debounceTimeout = setTimeout(() => {
+    const searchedData = tableDataCopy.filter((d) =>
+      d[fieldName].toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    displayTableData(searchedData);
+  }, 700); // 700ms delay
 }
 
 function displayFilterOptions(data) {
@@ -242,7 +246,7 @@ const fetchAllJSONFiles = async () => {
       responses.map((response) => response.json())
     );
     // console.log(data);
-    
+
     displayFilterOptions(data);
     allFilterOptionsData = data;
     return data;
@@ -269,15 +273,14 @@ const activateFilters = () => {
         "Единый перечень продукции ЕАЭС": "Unified Product List EAEU",
         "Единый перечень продукции РФ": "Unified Product List RF",
         "Технический регламент": "technicalReglaments",
-        "Вид заявителя": "applicantType"
+        "Вид заявителя": "applicantType",
       };
 
       return [keyMap[key] || key, value];
-    }))
+    })
+  );
 
-    // console.log(updated);
-    
-  
+  // console.log(updated);
 
   // Filter the table data based on the active filters
   const filteredData = tableDataCopy.filter((item) => {
@@ -287,11 +290,8 @@ const activateFilters = () => {
   });
 
   console.log(tableDataCopy);
-  
+
   displayTableData(filteredData);
-  
-  
-  
 };
 
 clearFiltersBtn.addEventListener("click", () => {
@@ -309,11 +309,8 @@ clearFiltersBtn.addEventListener("click", () => {
   activeFilters = newObject;
 
   console.log(activeFilters);
-  
+
   displayTableData(tableDataCopy);
 });
-
-// console.log(tableDataCopy);
-
 
 fetchAllJSONFiles();
